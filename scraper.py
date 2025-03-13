@@ -18,9 +18,10 @@ def get_paper_details(paper_url):
     soup = BeautifulSoup(response.text, 'html.parser')
 
     title = soup.find('h1').get_text(strip=True)
-    abstract_elem = soup.find('p', class_='text-gray-700 dark:text-gray-400')
+    title = title.replace("\n", " ")
+
+    abstract_elem = soup.find('p', class_='text-gray-600')
     abstract = abstract_elem.get_text(strip=True) if abstract_elem else ""
-    
     abstract = abstract.replace("\n", " ")
 
     paper_id = paper_url.split('/papers/')[1].split('#')[0]
