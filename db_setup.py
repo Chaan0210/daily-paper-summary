@@ -12,7 +12,8 @@ def create_db():
             pdf_link TEXT UNIQUE,
             translated_abstract TEXT,
             summary TEXT,
-            num_vote TEXT
+            num_vote TEXT,
+            date TEXT
         )
     ''')
     conn.commit()

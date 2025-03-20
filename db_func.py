@@ -15,18 +15,24 @@ def paper_exists(pdf_link):
     return row
 
 def save_paper(paper):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO papers (title, abstract, pdf_link, translated_abstract, summary, num_vote)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ''', (
-        paper['title'], 
-        paper['abstract'], 
-        paper['pdf_link'], 
-        paper['translated_abstract'], 
-        paper['summary'], 
-        paper['num_vote']
-    ))
-    conn.commit()
-    conn.close()
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO papers (title, abstract, pdf_link, translated_abstract, summary, num_vote, date)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            paper['title'], 
+            paper['abstract'], 
+            paper['pdf_link'], 
+            paper['translated_abstract'], 
+            paper['summary'], 
+            paper['num_vote'],
+            paper['date']
+        ))
+        conn.commit()
+        print("[DB] Commit successful for:", paper['pdf_link'])
+    except Exception as e:
+        print("[DB] ERROR saving paper:", e)
+    finally:
+        conn.close()

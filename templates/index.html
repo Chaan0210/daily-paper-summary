@@ -6,21 +6,69 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Hahmlet:wght@100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap"
       rel="stylesheet"
     />
     <style>
       body {
         font-family: "Gowun Batang", sans-serif;
         margin: 20px;
-        background-color: #f7f7f7;
+        background-color: #f6f6f6;
+      }
+      .spinner {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        color: #666;
+      }
+      .date-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      .date-nav a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        margin: 0 10px;
+      }
+      .date-nav .date-display {
+        font-size: 1.2rem;
+      }
+      .disabled {
+        color: #ccc;
+        cursor: not-allowed;
       }
       .paper {
-        background: #fff;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        max-width: 800px;
+      }
+      .paper::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("/static/paper-texture_2.jpeg") repeat;
+        opacity: 0.6;
+        pointer-events: none;
+        z-index: -1;
+        border-radius: 15px;
+      }
+      .highlight {
+        display: inline-block;
+        background-color: #f5d0e4;
+        padding: 0.1em 0.3em;
+        border-radius: 5px;
+        line-height: 1.2;
       }
       h2 {
         margin-top: 0;
@@ -28,27 +76,38 @@
       .section {
         margin-bottom: 10px;
       }
+      .subtitle {
+        font-size: 1.3em;
+        font-weight: 900;
+      }
+      #noPapersMsg {
+        text-align: center;
+        color: #666;
+        font-size: 1.1rem;
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
-    <h1>정리된 논문 목록</h1>
-    {% for paper in papers %}
-    <div class="paper">
-      <h2>{{ paper.title }}</h2>
-      <div class="section"><strong>Upvote:</strong> {{ paper.num_vote }}</div>
-      <div class="section">
-        <strong>Abstract:</strong>
-        <p>{{ paper.translated_abstract }}</p>
-      </div>
-      <div class="section">
-        <strong>Summary:</strong>
-        <p>{{ paper.summary_md | safe }}</p>
-      </div>
-      <div class="section">
-        <strong>Paper URL:</strong>
-        <a href="{{ paper.pdf_link }}" target="_blank">{{ paper.pdf_link }}</a>
-      </div>
+    <div class="spinner" id="spinner">loading...</div>
+
+    <div class="date-nav">
+      <a href="#" id="prevLink">&#9664;</a>
+      <span class="date-display" id="dateDisplay"></span>
+      <a href="#" id="nextLink">&#9654;</a>
     </div>
-    {% endfor %}
+
+    <div id="papersContainer"></div>
+    <div id="noPapersMsg" style="display: none">
+      논문이 없거나 로드 중입니다.
+    </div>
+
+    <script>
+      const currentDate = "{{ current_date }}";
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+      initPage(currentDate);
+    </script>
   </body>
 </html>
