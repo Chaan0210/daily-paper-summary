@@ -27,4 +27,7 @@ def get_paper_details(paper_url):
     paper_id = paper_url.split('/papers/')[1].split('#')[0]
     pdf_link = "https://arxiv.org/pdf/" + paper_id
 
-    return {'title': title, 'abstract': abstract, 'pdf_link': pdf_link}
+    num_vote_elem = soup.find('div', class_='font-semibold text-orange-500')
+    num_vote = num_vote_elem.get_text(strip=True) if num_vote_elem else ""
+
+    return {'title': title, 'abstract': abstract, 'pdf_link': pdf_link, 'num_vote': num_vote}

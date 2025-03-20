@@ -3,7 +3,7 @@ import requests
 from io import BytesIO
 import PyPDF2
 import re
-from transformers import pipeline
+from translator import ollama_generate
 
 def extract_text_from_pdf(pdf_url):
     response = requests.get(pdf_url)
@@ -22,9 +22,6 @@ def extract_text_from_pdf(pdf_url):
                 full_text += page_text + "\n"
     return full_text
 
-def summarize_text(pdf_text):
-    prompt = pdf_text + "\n\n이 글을 한국어로 요약하고 정리해."
-    pipe = pipeline("text-generation", model="deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B", trust_remote_code=True)
-    result = pipe(prompt)
-    
-    return result[0]['generated_text']
+def summarize_text(pdf_text, tgt_lang="ko"):
+    prompt = pdf_text + f"\n\nSummarize this article in {tgt_lang} in great detail."
+    return ollama_generate(prompt, model="exaone3.5")
