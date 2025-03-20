@@ -2,7 +2,7 @@
 from flask import Flask, render_template, jsonify
 import markdown
 import datetime
-from date_handler import start_scraping_async
+from date_handler import start_scraping_async, progress_info
 from db_func import get_db_connection
 
 app = Flask(__name__)
@@ -18,7 +18,6 @@ def index():
 @app.route("/papers/<date_str>")
 def papers_by_date(date_str):
     start_scraping_async(date_str)
-
     return render_template("index.html", current_date=date_str)
 
 @app.route("/api/papers/<date_str>")
@@ -52,6 +51,30 @@ def api_date_nav(date_str):
         "prev_date": prev_date.isoformat(),
         "next_date": next_date.isoformat(),
         "can_go_next": can_go_next
+    })
+
+@app.route("/api/date-progress/<date_str>")
+def api_date_progress(date_str):
+    total = 0
+    if date_str in progress_info:
+        total = progress_info[date_str]["total"]
+
+    conn = get_db_connection()
+    row = conn.execute("""
+        SELECT COUNT(*) as cnt
+        FROM papers
+        WHERE date = ?
+    """, (date_str,)).fetchone()
+    conn.close()
+
+    processed = row["cnt"]
+
+    if processed > total:
+        total = processed
+    
+    return jsonify({
+        "total": total,
+        "processed": processed
     })
 
 if __name__ == "__main__":

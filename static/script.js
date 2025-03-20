@@ -5,6 +5,7 @@ const dateDisplay = document.getElementById("dateDisplay");
 const prevLink = document.getElementById("prevLink");
 const nextLink = document.getElementById("nextLink");
 const noPapersMsg = document.getElementById("noPapersMsg");
+const progressInfo = document.getElementById("progressInfo");
 
 function loadDateNav(dateStr) {
   fetch(`/api/date-nav/${dateStr}`)
@@ -19,6 +20,20 @@ function loadDateNav(dateStr) {
       } else {
         nextLink.href = "#";
         nextLink.classList.add("disabled");
+      }
+    })
+    .catch((err) => console.error(err));
+}
+
+function loadProgress(dateStr) {
+  fetch(`/api/date-progress/${dateStr}`)
+    .then((res) => res.json())
+    .then((data) => {
+      const { total, processed } = data;
+      if (total === 0) {
+        progressInfo.textContent = "";
+      } else {
+        progressInfo.textContent = `(${processed} / ${total})`;
       }
     })
     .catch((err) => console.error(err));
@@ -86,4 +101,5 @@ function loadPapers(dateStr) {
 function initPage(dateStr) {
   loadDateNav(dateStr);
   loadPapers(dateStr);
+  loadProgress(dateStr);
 }

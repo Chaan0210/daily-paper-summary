@@ -6,11 +6,17 @@ from summarizer import extract_text_from_pdf, summarize_text
 from db_func import paper_exists, save_paper
 
 scraping_threads = {}
+progress_info = {}
 
 def process_date(date_str):
     print(f"[{date_str}] process_date started.")
     base_url = f"https://huggingface.co/papers/date/{date_str}"
     paper_links = get_all_paper_links(base_url)
+
+    progress_info[date_str] = {
+        "total": len(paper_links),
+    }
+
     print(f"[{date_str}] paper links:", paper_links)
 
     for link in paper_links:
