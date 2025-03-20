@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>논문 정리</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f7f7f7;
+      }
+      .paper {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        margin-top: 0;
+      }
+      .section {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>정리된 논문 목록</h1>
+    {% for paper in papers %}
+    <div class="paper">
+      <h2>{{ paper.title }}</h2>
+      <div class="section"><strong>투표 수:</strong> {{ paper.num_vote }}</div>
+      <div class="section">
+        <strong>초록:</strong>
+        <p>{{ paper.translated_abstract }}</p>
+      </div>
+      <div class="section">
+        <strong>요약:</strong>
+        <p>{{ paper.summary }}</p>
+      </div>
+      <div class="section">
+        <strong>PDF 링크:</strong>
+        <a href="{{ paper.pdf_link }}" target="_blank">{{ paper.pdf_link }}</a>
+      </div>
+    </div>
+    {% endfor %}
+  </body>
+</html>
